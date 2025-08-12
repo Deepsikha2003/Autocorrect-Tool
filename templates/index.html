@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Autocorrect Tool</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Autocorrect Tool</h1>
+
+        <form method="POST">
+            <textarea name="text" placeholder="Type your sentence here...">{{ request.form.get('text', '') }}</textarea>
+            <button type="submit">Correct</button>
+        </form>
+
+        {% if corrected %}
+        <div class="output-container">
+            <div class="box corrected-box">
+                <h2>Corrected Text</h2>
+                <p>{{ corrected }}</p>
+            </div>
+
+            {% if suggestions %}
+            <div class="box suggestions-box">
+                <h2>Suggestions</h2>
+                <ul>
+                    {% for s in suggestions %}
+                    <li>
+                        <p><span class="highlight">Wrong Word:</span> <code>{{ s.wrong_word_display }}</code></p>
+                        <p><span class="highlight">Issue:</span> {{ s.message }}</p>
+                        <p><span class="highlight">Suggestion:</span> {{ s.replacements|join(', ') if s.replacements else 'No suggestion available' }}</p>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
